@@ -28,6 +28,9 @@ gem 'grape-swagger', '= 0.7.2'
 
 gem 'georuby', '~> 2.3.0'
 
+gem 'geocoder',
+  github: 'eugenehp/ruby-geocoder'
+
 gem 'activesupport-json_encoder',
   github: 'rails/activesupport-json_encoder'
 

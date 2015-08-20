@@ -1,4 +1,10 @@
 GIT
+  remote: git://github.com/eugenehp/ruby-geocoder.git
+  revision: d77282d2eed89315c6bcca882a857b13b601e636
+  specs:
+    geocoder (1.2.9)
+
+GIT
   remote: git://github.com/evercam/faraday-digestauth.git
   revision: 15c79778043d45f931ab947964161f0e78a0a122
   specs:
@@ -111,7 +117,6 @@ GEM
       multipart-post (>= 1.2, < 3)
     ffi (1.9.10)
     formatador (0.2.5)
-    geocoder (1.2.9)
     georuby (2.3.0)
     grape (0.9.0)
       activesupport
@@ -329,6 +334,7 @@ DEPENDENCIES
   factory_girl
   fakes3
   faraday-digestauth (~> 0.1.0)!
+  geocoder!
   georuby (~> 2.3.0)
   grape
   grape-entity
@@ -370,3 +376,6 @@ DEPENDENCIES
   thin
   unicorn
   webmock (~> 1.21.0)
+
+BUNDLED WITH
+   1.10.6
