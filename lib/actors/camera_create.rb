@@ -82,6 +82,10 @@ module Evercam
         if motiondetection_threshold && ( motiondetection_threshold < 1 || motiondetection_threshold > 100 )
           add_error(:motiondetection_threshold, :valid, 'Must provide motiondetection_threshold in between 1..100')
         end
+        # TODO: add validation for
+        # string :schedule
+        # string :webhook_url
+        # string :region_of_interest
       end
 
       def execute
@@ -120,6 +124,8 @@ module Evercam
                             name: name,
                             owner: user,
                             is_public: is_public,
+                            motiondetection_threshold: inputs[:motiondetection_threshold],
+                            webhook_url: inputs[:webhook_url],
                             config: {})
         camera.vendor_model = model unless model.nil?
 
@@ -162,6 +168,16 @@ module Evercam
             camera.schedule = JSON.parse(inputs[:schedule])
           rescue => _e
             add_error(:schedule, :invalid, "The parameter 'schedule' isn't formatted as a proper JSON.")
+          end
+        end
+
+        if inputs[:region_of_interest].blank?
+          camera.region_of_interest = {}
+        else
+          begin
+            camera.region_of_interest = JSON.parse(inputs[:region_of_interest])
+          rescue => _e
+            add_error(:region_of_interest, :invalid, "The parameter 'region_of_interest' isn't formatted as a proper JSON.")
           end
         end
         

@@ -93,6 +93,14 @@ module Evercam
         if location_lat && nil == location_lng
           add_error(:location_lng, :valid, 'Must provide both location coordinates')
         end
+
+        if motiondetection_threshold && ( motiondetection_threshold < 1 || motiondetection_threshold > 100 )
+          add_error(:motiondetection_threshold, :valid, 'Must provide motiondetection_threshold in between 1..100')
+        end
+        # TODO: add validation for
+        # string :schedule
+        # string :webhook_url
+        # string :region_of_interest
       end
 
       def execute
@@ -162,6 +170,22 @@ module Evercam
           # Camera made private so delete any public shares.
           CameraShare.where(kind: CameraShare::PUBLIC,
                             camera_id: camera.id).delete
+        end
+
+        if inputs[:motiondetection_threshold]
+          camera.motiondetection_threshold = inputs[:motiondetection_threshold]
+        end
+
+        if inputs[:schedule]
+          camera.schedule = inputs[:schedule]
+        end
+
+        if inputs[:webhook_url]
+          camera.webhook_url = inputs[:webhook_url]
+        end
+
+        if inputs[:region_of_interest]
+          camera.region_of_interest = inputs[:region_of_interest]
         end
 
         camera.values[:config].merge!({'external_host' => inputs[:external_host].empty? ? '' : inputs[:external_host]}) unless inputs[:external_host].nil?
