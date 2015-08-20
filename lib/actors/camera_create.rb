@@ -35,6 +35,11 @@ module Evercam
 
         boolean :is_online
         boolean :discoverable
+
+        integer :motiondetection_threshold
+        string :schedule
+        string :webhook_url
+        string :region_of_interest
       end
 
       def validate
@@ -73,6 +78,10 @@ module Evercam
         if location_lat && nil == location_lng
           add_error(:location_lng, :valid, 'Must provide both location coordinates')
         end
+
+        if motiondetection_threshold && ( motiondetection_threshold < 1 || motiondetection_threshold > 100 )
+          add_error(:motiondetection_threshold, :valid, 'Must provide motiondetection_threshold in between 1..100')
+        end
       end
 
       def execute
@@ -107,7 +116,7 @@ module Evercam
                                              "incomplete_camera_urls_error")
         end
 
-        camera = Camera.new(exid: id,
+        camera = Camera.create(exid: id,
                             name: name,
                             owner: user,
                             is_public: is_public,
@@ -146,6 +155,16 @@ module Evercam
           camera.last_online_at = Time.now
         end
 
+        if inputs[:schedule].blank?
+          camera.schedule = {}
+        else
+          begin
+            camera.schedule = JSON.parse(inputs[:schedule])
+          rescue => _e
+            add_error(:schedule, :invalid, "The parameter 'schedule' isn't formatted as a proper JSON.")
+          end
+        end
+        
         camera.values[:config].merge!({'external_host' => inputs[:external_host]}) if inputs[:external_host]
         camera.values[:config].merge!({'external_http_port' => inputs[:external_http_port]}) if inputs[:external_http_port]
         camera.values[:config].merge!({'external_rtsp_port' => inputs[:external_rtsp_port]}) if inputs[:external_rtsp_port]

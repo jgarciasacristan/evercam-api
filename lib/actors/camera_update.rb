@@ -38,6 +38,11 @@ module Evercam
         string :location_lat, :empty => true
 
         boolean :discoverable
+
+        integer :motiondetection_threshold
+        string :schedule
+        string :webhook_url
+        string :region_of_interest
       end
 
       def validate
