@@ -165,7 +165,8 @@ module Evercam
                 :owner_id, :is_public, :config,
                 :name, :last_polled_at, :is_online,
                 :timezone, :last_online_at, :location,
-                :mac_address, :model_id, :discoverable, :preview, :thumbnail_url
+                :mac_address, :model_id, :discoverable, :preview, :thumbnail_url,
+                :motiondetection_threshold, :schedule, :webhook_url, :region_of_interest
               )
             end
 
@@ -218,6 +219,10 @@ module Evercam
         optional :mpeg_url, type: String, desc: "MPEG url."
         optional :audio_url, type: String, desc: "Audio url."
         optional :h264_url, type: String, desc: "H264 url."
+        optional :motiondetection_threshold, type: Integer, desc: "Thresold from 1 to 100 to trigger motion detection."
+        optional :schedule, type: String, desc: "Schedule when motion detection is enabled, works together with thresold."
+        optional :webhook_url, type: String, desc: "When motion detecetion is triggered, system will POST data to this URL."
+        optional :region_of_interest, type: String, desc: "Polygon json definition, works together with thresold."
       end
       post do
         raise BadRequestError.new("Requester is not a user.") if caller.nil? || !caller.instance_of?(User)
@@ -267,6 +272,10 @@ module Evercam
         optional :mpeg_url, type: String, desc: "MPEG url."
         optional :audio_url, type: String, desc: "Audio url."
         optional :h264_url, type: String, desc: "H264 url."
+        optional :motiondetection_threshold, type: Integer, desc: "Thresold from 1 to 100 to trigger motion detection."
+        optional :schedule, type: String, desc: "Schedule when motion detection is enabled, works together with thresold."
+        optional :webhook_url, type: String, desc: "When motion detecetion is triggered, system will POST data to this URL."
+        optional :region_of_interest, type: String, desc: "Polygon json definition, works together with thresold."
       end
       patch '/:id' do
         camera = Evercam::Services.dalli_cache.get(params[:id])
